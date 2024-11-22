@@ -53,7 +53,15 @@ app.post("/login", async (req, res) => {
 });
 
 app.get("/profile", (req, res) => {
-  res.json(req.cookies);
+  const { token } = req.cookies;
+  jwt.verify(token, secret, {}, (error, info) => {
+    if (error) throw error;
+    res.json(info);
+  });
+});
+
+app.post("/logout", (req, res) => {
+  res.cookie("token", "").json("ok");
 });
 
 app.listen(4000);
