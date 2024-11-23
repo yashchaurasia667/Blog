@@ -8,6 +8,7 @@ import multer from "multer";
 import fs from "fs";
 
 import User from "./models/User";
+import Post from "./models/Post";
 
 const app = express();
 
@@ -72,14 +73,28 @@ app.post("/logout", (req, res) => {
   res.cookie("token", "").json("ok");
 });
 
-app.post("/createpost", uploadMiddleware.single("file"), (req, res) => {
+app.post("/createpost", uploadMiddleware.single("file"), async (req, res) => {
   if (!req.file) throw new Error("no file");
   const { originalname, path } = req.file;
   const parts = originalname.split(".");
   const ext = parts[parts.length - 1];
+  const newPath = path + "." + ext;
+  fs.renameSync(path, newPath);
 
-  fs.renameSync(path, path + "." + ext);
-  res.json(req.file);
+  const { title, summary, content } = req.body;
+
+  const postDoc = await Post.create({
+    title,
+    summary,
+    content,
+    cover: newPath,
+  });
+
+  res.json(postDoc);
+});
+
+app.get("/post", async (req, res) => {
+  res.json(await Post.find());
 });
 
 app.listen(4000);
