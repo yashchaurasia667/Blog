@@ -1,8 +1,8 @@
 import Home from "./pages/home";
 import Login from "./pages/login";
 import Register from "./pages/Register";
+import CreatePost from "./pages/CreatePost";
 import Layout from "./layouts/layout";
-import { UserContextProvider } from "./contexts/userContext/UserContextProvider";
 
 import {
   createBrowserRouter,
@@ -16,13 +16,12 @@ import "./App.css";
 function App() {
   const router = createBrowserRouter(
     createRoutesFromElements(
-      <UserContextProvider>
-        <Route path="/" element={<Layout />}>
-          <Route index element={<Home />} />
-          <Route path="login" element={<Login />} />
-          <Route path="register" element={<Register />} />
-        </Route>
-      </UserContextProvider>
+      <Route path="/" element={<Layout />}>
+        <Route index element={<Home />} />
+        <Route path="login" element={<Login />} />
+        <Route path="register" element={<Register />} />
+        <Route path="create" element={<CreatePost />} />
+      </Route>
     )
   );
   return <RouterProvider router={router} />;

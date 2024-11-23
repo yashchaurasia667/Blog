@@ -1,10 +1,15 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { Navigate } from "react-router-dom";
+import UserContext from "../contexts/userContext/UserContext";
 
 const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [redirect, setRedirect] = useState(false);
+
+  const context = useContext(UserContext);
+  if (!context) throw new Error("no user context");
+  const { setUserInfo } = context;
 
   const login = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -17,8 +22,12 @@ const Login = () => {
       },
       credentials: "include",
     });
-    if (res.ok) setRedirect(true);
-    else alert("Wrong credentials");
+    if (res.ok) {
+      res.json().then((userInfo) => {
+        setUserInfo(userInfo);
+        setRedirect(true);
+      });
+    } else alert("Wrong credentials");
   };
 
   if (redirect) return <Navigate to={"/"} />;

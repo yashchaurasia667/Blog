@@ -1,4 +1,4 @@
-import { ReactNode } from "react";
+import { ReactNode, useState } from "react";
 import UserContext from "./UserContext";
 
 interface contextProp {
@@ -6,6 +6,8 @@ interface contextProp {
 }
 
 export const UserContextProvider = ({ children }: contextProp) => {
-  const value = {};
+  const [userInfo, setUserInfo] = useState({});
+
+  const value = { userInfo, setUserInfo };
   return <UserContext.Provider value={value}>{children}</UserContext.Provider>;
 };
